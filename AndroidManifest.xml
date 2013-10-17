@@ -105,6 +105,14 @@
             android:name="com.kvs.kvssamples.DateSample"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name="com.kvs.kvssamples.SQLiteExample"
+            android:label="@string/app_name">
+        </activity>
+        <activity
+            android:name="com.kvs.kvssamples.SQLView"
+            android:label="@string/app_name">
+        </activity>
     </application>
 
 </manifest>
