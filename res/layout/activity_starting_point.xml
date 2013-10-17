@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="32dp"
+        android:orientation="vertical"
+        >
+        
+        <TextView
+        android:id="@+id/textViewDisplay"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/total" 
+        android:textSize="40sp"
+        android:layout_gravity="center"/>
+        
+        <Button
+            android:id="@+id/btnAdd"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/addone"
+            android:layout_gravity="center" />
+        <Button
+            android:id="@+id/btnSub"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/subone"
+            android:layout_gravity="center" />
+            
+</LinearLayout>
