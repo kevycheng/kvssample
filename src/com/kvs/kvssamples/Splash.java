@@ -14,7 +14,7 @@ public class Splash extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         
-        sound = MediaPlayer.create(Splash.this, R.raw.babylaugh);
+        sound = MediaPlayer.create(Splash.this, R.raw.galaxy_s5_sms);
         
         SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         boolean bMusic = getPrefs.getBoolean("MusicCheckbox", true);
