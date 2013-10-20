@@ -40,12 +40,7 @@ public class SQLiteExample extends Activity implements View.OnClickListener{
 			entry.open();
 			entry.createEntry(name, hotness);
 			entry.close();
-			
-			Dialog d = new Dialog(this);
-			d.setTitle("Heck Yea!");
-			TextView tv = new TextView(this);
-			tv.setText("Success!");
-			
+		
 			}
 			catch (Exception e){
 				didItWork = false;
@@ -59,17 +54,18 @@ public class SQLiteExample extends Activity implements View.OnClickListener{
 					d.setTitle("Heck Yea!");
 					TextView tv = new TextView(this);
 					tv.setText("Success");
+					d.setContentView(tv);
+					d.show();
 				}
 				else
 				{
-					Toast.makeText(getApplicationContext(),
-				    	      "fail!! "
-				    	      , Toast.LENGTH_LONG).show();
-					
+				
 					Dialog d = new Dialog(this);
 					d.setTitle("Heck Yea!");
 					TextView tv = new TextView(this);
 					tv.setText("FAILED!!!");
+					d.setContentView(tv);
+					d.show();
 				}
 			}
 			break;

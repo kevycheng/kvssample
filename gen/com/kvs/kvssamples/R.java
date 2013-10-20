@@ -53,8 +53,9 @@ public final class R {
         public static final int woodbg=0x7f02000b;
     }
     public static final class id {
-        public static final int aboutUS=0x7f0c0048;
-        public static final int action_settings=0x7f0c004b;
+        public static final int aboutUS=0x7f0c004b;
+        public static final int action_settings=0x7f0c004e;
+        public static final int addcomment=0x7f0c0045;
         public static final int analogClock1=0x7f0c001a;
         public static final int bConfirm=0x7f0c001f;
         public static final int bReturn=0x7f0c003c;
@@ -70,13 +71,14 @@ public final class R {
         public static final int btnLauncher=0x7f0c0013;
         public static final int btnLoad=0x7f0c002b;
         public static final int btnLog=0x7f0c0011;
-        public static final int btnResult=0x7f0c0046;
+        public static final int btnResult=0x7f0c0049;
         public static final int btnSave=0x7f0c002a;
         public static final int btnSub=0x7f0c0003;
         public static final int btnUpdate=0x7f0c000e;
-        public static final int chkPassword=0x7f0c0047;
-        public static final int editCommands=0x7f0c0044;
-        public static final int editContent=0x7f0c0045;
+        public static final int chkPassword=0x7f0c004a;
+        public static final int deletecomment=0x7f0c0046;
+        public static final int editCommands=0x7f0c0047;
+        public static final int editContent=0x7f0c0048;
         public static final int editInput=0x7f0c0029;
         public static final int etAction=0x7f0c0017;
         public static final int etCity=0x7f0c0025;
@@ -89,14 +91,15 @@ public final class R {
         public static final int etSQLName=0x7f0c003e;
         public static final int etSend=0x7f0c0021;
         public static final int etThings=0x7f0c0016;
-        public static final int exit=0x7f0c004a;
+        public static final int exit=0x7f0c004d;
+        public static final int group=0x7f0c0044;
         public static final int ibTakePic=0x7f0c0035;
         public static final int icon=0x7f0c0030;
         public static final int ivReturnedPic=0x7f0c0034;
         public static final int label=0x7f0c0031;
         public static final int label2=0x7f0c0032;
         public static final int listview=0x7f0c002f;
-        public static final int preferences=0x7f0c0049;
+        public static final int preferences=0x7f0c004c;
         public static final int rBoth=0x7f0c003b;
         public static final int rCrazy=0x7f0c0039;
         public static final int rSexy=0x7f0c003a;
@@ -149,7 +152,8 @@ public final class R {
         public static final int send=0x7f03000f;
         public static final int sqliteexample=0x7f030010;
         public static final int sqlview=0x7f030011;
-        public static final int text=0x7f030012;
+        public static final int testdatabase=0x7f030012;
+        public static final int text=0x7f030013;
     }
     public static final class menu {
         public static final int cool_menu=0x7f0b0000;
