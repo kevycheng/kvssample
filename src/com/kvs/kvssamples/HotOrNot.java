@@ -2,6 +2,7 @@ package com.kvs.kvssamples;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
@@ -78,6 +79,64 @@ public class HotOrNot{
         
 		ourDatabase.insert(DATABASE_TABLE, null, values);
 		ourDatabase.close();
+		
+	}
+
+	public String getData() {
+		// TODO Auto-generated method stub
+		String[] strColum = new String[] { KEY_ROWID, KEY_NAME, KEY_HOTNESS }; 
+		
+		Cursor c = ourDatabase.query(DATABASE_TABLE, strColum, null, null, null, null, null);
+		String result = "";
+		
+		int nRow = c.getColumnIndex(KEY_ROWID);
+		int nName = c.getColumnIndex(KEY_NAME);
+		int nHotness = c.getColumnIndex(KEY_HOTNESS);
+		
+		for(c.moveToFirst(); !c.isAfterLast(); c.moveToNext())
+		{
+			result = result + c.getString(nRow) + " " + c.getString(nName) + " " + c.getString(nHotness) +  "\n";
+		}
+		
+		return result;
+	}
+
+	public String getName(long l) {
+		// TODO Auto-generated method stub
+		String[] strColum = new String[] { KEY_ROWID, KEY_NAME, KEY_HOTNESS }; 
+		Cursor c = ourDatabase.query(DATABASE_TABLE, strColum, KEY_ROWID + "=" + l,null, null, null, null);
+		if(c!=null){
+			c.moveToFirst();
+			String name = c.getString(1);
+			return name;
+		}
+		return null;
+	}
+
+	public String getHotness(long l) {
+		// TODO Auto-generated method stub
+		String[] strColum = new String[] { KEY_ROWID, KEY_NAME, KEY_HOTNESS }; 
+		Cursor c = ourDatabase.query(DATABASE_TABLE, strColum, KEY_ROWID + "=" + l,null, null, null, null);
+		if(c!=null){
+			c.moveToFirst();
+			String name = c.getString(2);
+			return name;
+		}
+		return null;
+	}
+
+	public void UpdateEntry(long lrow, String name, String hotness) {
+		// TODO Auto-generated method stub
+		ContentValues cvUpdate = new ContentValues();
+		cvUpdate.put(KEY_NAME, name);
+		cvUpdate.put(KEY_HOTNESS, hotness);
+		ourDatabase.update(DATABASE_TABLE, cvUpdate, KEY_ROWID + "=" + lrow, null);
+		
+	}
+
+	public void DeleteEntry(long lrow1) {
+		// TODO Auto-generated method stub
+		ourDatabase.delete(DATABASE_TABLE, KEY_ROWID  + "=" + lrow1, null);
 		
 	}
 }
