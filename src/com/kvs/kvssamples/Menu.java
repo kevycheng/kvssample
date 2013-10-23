@@ -13,8 +13,8 @@ import android.widget.ListView;
 
 public class Menu extends ListActivity{
 
-	String strClassName[] = {"DateSampleTrigger","DateSample", "StartingPoint", "TextPlay", "Email", "Camera", "Data", "InternalData", "ExternalData", "ListViewSimple1", "HttpExample", "SQLiteExample", "TestDatabaseActivity"};
-	String strDisplayName[] = {"Date launcher","Date Sample", "StartingPoint", "TextPlay", "Email", "Camera", "Data", "InternalData", "ExternalData", "ListViewSimple1", "HttpExample", "SQLiteExample", "TestDatabaseActivity"};
+	String strClassName[] = {"TestDatabaseActivity", "SQLiteExample", "DateSampleTrigger","DateSample", "StartingPoint", "TextPlay", "Email", "Camera", "Data", "InternalData", "ExternalData", "ListViewSimple1", "HttpExample"};
+	String strDisplayName[] = {"00.TestDatabaseActivity", "01.SQLiteExample", "02.Date launcher","Date Sample", "StartingPoint", "TextPlay", "Email", "Camera", "Data", "InternalData", "ExternalData", "ListViewSimple1", "HttpExample"};
 
 	private ArrayAdapter<String> adapter;
 	

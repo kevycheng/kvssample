@@ -103,7 +103,7 @@ public class SQLiteExample extends Activity implements View.OnClickListener{
 			HotOrNot bon = new HotOrNot(this);
 			bon.open();
 			String returnName = bon.getName(l);
-			String returnHotness = bon.getHotness(l);
+			String returnHotness = bon.getDate(l);
 			bon.close();
 			
 			sqlName.setText(returnName);
