@@ -5,6 +5,30 @@
     android:orientation="vertical" 
     android:background="#e5e5e5"
     >
+    
+    <LinearLayout
+        android:id="@+id/group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/additem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add New" 
+            android:layout_weight="1"
+            android:onClick="onClick"/>
+
+        <Button
+            android:id="@+id/deleteitem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete First" 
+            android:layout_weight="1"
+            android:onClick="onClick"/>
+        
+    </LinearLayout>
+    
 <ListView 
     android:id="@+id/listview"
     android:layout_width="match_parent"

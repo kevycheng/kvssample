@@ -103,6 +103,10 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name="com.kvs.kvssamples.ListViewSimple2"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name="com.kvs.kvssamples.HttpExample"
             android:label="@string/app_name" >
         </activity>

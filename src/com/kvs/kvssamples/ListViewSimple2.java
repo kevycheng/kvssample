@@ -1,9 +1,10 @@
 package com.kvs.kvssamples;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+
+import com.kvs.kvssamples.R;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,7 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ListViewSimple1 extends Activity  implements View.OnClickListener{
+public class ListViewSimple2  extends Activity  implements View.OnClickListener{
 
 	Button sqladd, sqldelete;
 	
@@ -39,20 +40,13 @@ public class ListViewSimple1 extends Activity  implements View.OnClickListener{
 		final ListView mylistview = (ListView) findViewById(R.id.listview);
 		
 		final String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-		//        "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-		//        "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
-		//        "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
 		        "Android", "iPhone", "WindowsMobile" };
-		
-		//final ArrayList<String> list = new ArrayList<String>();
+
 	    for (int i = 0; i < values.length; ++i) {
 	    	m_listitem.add(values[i]);
 	    }
 	    
-	    //final MyPerformanceArrayAdapter adapter = new MyPerformanceArrayAdapter(this, values, values, values);
 	    adapter = new MyPerformanceArrayAdapter(this, m_listitem, m_listitem, m_listitem);
-	   //final StableArrayAdapter adapter = new StableArrayAdapter(this,
-	    //        android.R.layout.simple_list_item_1, list);
 	    
 	    mylistview.setAdapter(adapter);
 	        
@@ -69,13 +63,6 @@ public class ListViewSimple1 extends Activity  implements View.OnClickListener{
 	    
 	}
 	
-	//private HashMap<String, String, String> putData(String name, String purpose, String value) {
-	//    HashMap<String, String, String> item = new HashMap<String, String, String>();
-	//    item.put("name", name);
-	//    item.put("purpose", purpose);
-	//    return item;
-	//  }
-
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
@@ -89,88 +76,18 @@ public class ListViewSimple1 extends Activity  implements View.OnClickListener{
 			break;
 		case R.id.deleteitem:
 			String strFire = adapter.getItem(0);
-			//Log.e("adapter.getItem", "getItem");
-			//adapter.remove(strFire);
 			m_listitem.remove(0);
 			break;
 		}
 		adapter.notifyDataSetChanged();
 	}
-		
-	private class StableArrayAdapter extends ArrayAdapter<String> {
 
-	    HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
-
-	    public StableArrayAdapter(Context context, int textViewResourceId,
-	        List<String> objects) {
-	      super(context, textViewResourceId, objects);
-	      for (int i = 0; i < objects.size(); ++i) {
-	        mIdMap.put(objects.get(i), i);
-	      }
-	    }
-
-	    @Override
-	    public long getItemId(int position) {
-	      String item = getItem(position);
-	      return mIdMap.get(item);
-	    }
-
-	    @Override
-	    public boolean hasStableIds() {
-	      return true;
-	    }
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
-			Toast.makeText(getApplicationContext(),"getView"
-		    	      , Toast.LENGTH_LONG).show();
-			
-			return super.getView(position, convertView, parent);
-		}
-
-	  }
-	
-	public class MySimpleArrayAdapter extends ArrayAdapter<String> {
-		  private final Context context;
-		  private final String[] values;
-
-		  public MySimpleArrayAdapter(Context context, String[] values) {
-		    super(context, R.layout.listviewsimple_list_item, values);
-		    this.context = context;
-		    this.values = values;
-		  }
-
-		  @Override
-		  public View getView(int position, View convertView, ViewGroup parent) {
-		    LayoutInflater inflater = (LayoutInflater) context
-		        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		    View rowView = inflater.inflate(R.layout.listviewsimple_list_item, parent, false);
-		    TextView textView = (TextView) rowView.findViewById(R.id.label);
-		    ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-		    textView.setText(values[position]);
-		    // Change the icon for Windows and iPhone
-		    String s = values[position];
-		    if (s.startsWith("iPhone")) {
-		      imageView.setImageResource(R.drawable.ic_launcher);
-		    } else {
-		      imageView.setImageResource(R.drawable.ic_launcher);
-		    }
-
-		    return rowView;
-		  }
-		} 
-	
 	public class MyPerformanceArrayAdapter extends ArrayAdapter<String> {
 		  private final Activity context;
-		  //private final String[] names;
-		 // private final String[] names2;
-		  //private final String[] counter;
 		  
 		  private final ArrayList<String> names;
 		  private final ArrayList<String> names2;
 		  private final ArrayList<String> counter;
-		  
 
 		  class ViewHolder {
 		    public TextView text;
@@ -218,8 +135,4 @@ public class ListViewSimple1 extends Activity  implements View.OnClickListener{
 		    return rowView;
 		  }
 		}
-
 }
-
-
-
