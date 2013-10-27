@@ -27,26 +27,52 @@ public class ListViewSimple2  extends Activity  implements View.OnClickListener{
 	
 	MyPerformanceArrayAdapter adapter;
 	ArrayList<String> m_listitem = new ArrayList<String>();
-	
+	ArrayList<String> m_listsubitem = new ArrayList<String>();
+	//private kvsActivityMgr m_Mgr;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listviewsimple1_layout);
 		
+		Log.e("onCreate", "1");
+		
 		sqladd = (Button) findViewById(R.id.additem);
 		sqldelete = (Button) findViewById(R.id.deleteitem);
 		
+		Log.e("onCreate", "2");
+		
 		final ListView mylistview = (ListView) findViewById(R.id.listview);
 		
-		final String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-		        "Android", "iPhone", "WindowsMobile" };
-
-	    for (int i = 0; i < values.length; ++i) {
-	    	m_listitem.add(values[i]);
+		// load db
+		Log.e("onCreate", "3");
+		
+		kvsActivityMgr m_Mgr = new kvsActivityMgr(ListViewSimple2.this);
+		Log.e("onCreate", "3.5");
+		
+		m_Mgr.open();
+		Log.e("onCreate", "4");
+		
+		List<kvsActivity> activities = m_Mgr.getAllActivities();
+		
+		Log.e("onCreate", "5");
+		
+		Log.e("onCreate", "6");
+		
+		Log.e("onCreate", "7");
+		
+		for (int i = 0; i < activities.size(); ++i) {
+			kvsActivity item = activities.get(i);
+	    	m_listitem.add(item.getActivityName());
+	    	m_listsubitem.add(String.valueOf(item.getId()));
 	    }
 	    
-	    adapter = new MyPerformanceArrayAdapter(this, m_listitem, m_listitem, m_listitem);
+		Log.e("onCreate", "8");
+		
+	    adapter = new MyPerformanceArrayAdapter(this, m_listitem, m_listsubitem, m_listitem);
+	    
+	    Log.e("onCreate", "9");
 	    
 	    mylistview.setAdapter(adapter);
 	        
@@ -56,30 +82,79 @@ public class ListViewSimple2  extends Activity  implements View.OnClickListener{
 	    	  public void onItemClick(AdapterView<?> parent, View view,
 	    	    int position, long id) {
 	    	    Toast.makeText(getApplicationContext(),
-	    	      "Click ListItem Number " + position+ ", name = " + values[position]
+	    	      "Click ListItem Number " + position+ ", name = " + m_listitem.get(position)
 	    	      , Toast.LENGTH_LONG).show();
 	    	  }
 	      });	    
-	    
 	}
 	
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.additem:
-			Log.e("adapter.add", "befoe adapter.add...");
-			String[] comments = new String[] { "Cool", "Very nice", "Hate it" };
-		     int nextInt = new Random().nextInt(3);
-		    m_listitem.add(comments[nextInt]);
-		    adapter.notifyDataSetChanged();
-			Log.e("adapter.add", "after adapter.add...");
+			// add db and listview
+			AddDBAndListView();
 			break;
-		case R.id.deleteitem:
-			String strFire = adapter.getItem(0);
-			m_listitem.remove(0);
+		case R.id.deleteitem:		
+			RemoveDBAndListView();
+			
 			break;
 		}
 		adapter.notifyDataSetChanged();
+	}
+
+	private void RemoveDBAndListView() {
+		//String strFire = adapter.getItem(0);
+
+		//String sRow1 = sqlRowID.getText().toString();
+		//long lrow1 = Long.parseLong(sRow1);
+		
+		kvsActivityMgr ex1 = new kvsActivityMgr(this);
+		ex1.open();
+		
+		if(m_listitem.size()>0 && m_listsubitem.size()>0)
+		{
+			long id = Long.parseLong(m_listsubitem.get(0));
+			
+			ex1.DeleteEntry(id);
+			
+			m_listitem.remove(0);
+			m_listsubitem.remove(0);
+		}
+		
+		ex1.close();
+		
+	}
+
+	private void AddDBAndListView() {
+		
+		Log.e("AddDBAndListView", "befoe add...");
+		String[] comments = new String[] { "Cool", "Very nice", "Hate it" };
+	     int nextInt = new Random().nextInt(3);
+	     
+	     
+	     int nNewID = 1; // database start from 1
+	     if(m_listitem.size()>0)
+	     {
+	    	 int nLast = (m_listsubitem.size()-1);
+	    	 String nLastID = m_listsubitem.get(nLast);
+		     int nID = Integer.parseInt(nLastID);
+		     nNewID = nID +1;
+	     }
+	     
+	     String sNewID = String.valueOf(nNewID);
+	     
+	    m_listitem.add(comments[nextInt]);
+	    m_listsubitem.add(sNewID);
+	    adapter.notifyDataSetChanged();
+	    
+		Log.e("adapter.add", "after adapter.add...");
+		
+		kvsActivityMgr entry = new kvsActivityMgr(this);
+		entry.open();
+		entry.createEntry(comments[nextInt], comments[nextInt]);
+		entry.close();
+		
 	}
 
 	public class MyPerformanceArrayAdapter extends ArrayAdapter<String> {

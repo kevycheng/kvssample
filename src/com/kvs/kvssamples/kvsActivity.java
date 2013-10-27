@@ -14,11 +14,11 @@ public class kvsActivity {
 	    this.id = id;
 	  }
 
-	  public String getComment() {
+	  public String getActivityName() {
 	    return strActivityName;
 	  }
 
-	  public void setComment(String comment) {
+	  public void setActivityName(String comment) {
 	    this.strActivityName = comment;
 	  }
 	  

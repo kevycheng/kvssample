@@ -8,62 +8,60 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class HotOrNot{
-
+public class kvsActivityMgr {
+	
+	private kvsDBHelper m_dbHelper;
+	private final Context m_ourContext;
+	private SQLiteDatabase m_ourDatabase;
+	
 	public static final String KEY_ROWID = "_id";
 	public static final String KEY_NAME = "persons_name";
 	public static final String KEY_DATE = "persons_date";
 	
-	private static final String DATABASE_NAME = "Activity.db";
-	private static final String DATABASE_TABLE = "ActivityTable";
-	private static final int DATABASE_VERSION = 2;
+	private static final String DATABASE_NAME = "Activity2.db";
+	private static final String DATABASE_TABLE = "ActivityTable2";
+	private static final int DATABASE_VERSION = 1;
 	
-	//private String[] allColumns = { MySQLiteHelper.COLUMN_ID,
-	//	      MySQLiteHelper.COLUMN_COMMENT };
 	private String[] m_strColum = { KEY_ROWID, KEY_NAME, KEY_DATE };
-	
-	private DbHelper m_dbHelper;
-	private final Context m_ourContext;
-	private SQLiteDatabase m_ourDatabase;
-	
-	private static class DbHelper extends SQLiteOpenHelper{
+
+public class kvsDBHelper extends SQLiteOpenHelper{
 		
-		public DbHelper(Context context) {
-			super(context, DATABASE_NAME, null, DATABASE_VERSION);
-		}
-		
-		@Override
-		public void onCreate(SQLiteDatabase db) {
-			
-			Log.e("onCreate", "First onCreate Database!!!!!");
-			
-			String DATABASE_CREATE = "create table " + DATABASE_TABLE 
-					+ "(" + KEY_ROWID + " integer primary key autoincrement, "
-					+ KEY_NAME + " text not null, "
-	                + KEY_DATE + " text not null);";
-	        db.execSQL(DATABASE_CREATE);
-		}
-		
-		@Override
-		public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
-			// Drop older table if existed
-	        db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE);
-	 
-	        // Create tables again
-	        onCreate(db);
-		}
+	public kvsDBHelper(Context context) {
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 	
-	public HotOrNot(Context c){
+	@Override
+	public void onCreate(SQLiteDatabase db) {
+		
+		Log.e("onCreate", "First onCreate Database!!!!!");
+		
+		String DATABASE_CREATE = "create table " + DATABASE_TABLE 
+				+ "(" + KEY_ROWID + " integer primary key autoincrement, "
+				+ KEY_NAME + " text not null, "
+                + KEY_DATE + " text not null);";
+        db.execSQL(DATABASE_CREATE);
+	}
+	
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
+		// Drop older table if existed
+        db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE);
+ 
+        // Create tables again
+        onCreate(db);
+	}
+}
+	
+	public kvsActivityMgr(Context c){
+		Log.e("kvsActivityMgr", "kvsActivityMgr");
 		m_ourContext = c;
 	}
 	
-	public HotOrNot open() throws SQLException{
-		m_dbHelper = new DbHelper(m_ourContext);
+	public kvsActivityMgr open() throws SQLException{
+		m_dbHelper = new kvsDBHelper(m_ourContext);
 		m_ourDatabase = m_dbHelper.getWritableDatabase();
 		return this;
 	}
@@ -97,6 +95,29 @@ public class HotOrNot{
 		
 	    return ac;
 	  }
+	
+	public List<kvsActivity> getAllActivities() {
+		
+		Log.e("getAllActivities", "getAllActivities...");
+		
+		Cursor cIndex = m_ourDatabase.query(DATABASE_TABLE, m_strColum, null, null, null, null, null);
+		
+		int nRow = cIndex.getColumnIndex(KEY_ROWID);
+		int nName = cIndex.getColumnIndex(KEY_NAME);
+		int nDate = cIndex.getColumnIndex(KEY_DATE);
+		
+		List<kvsActivity> activities = new ArrayList<kvsActivity>();
+		
+		for(cIndex.moveToFirst(); !cIndex.isAfterLast(); cIndex.moveToNext())
+		{
+			kvsActivity ac = cursorToActivity(cIndex);
+			activities.add(ac);
+		}
+		
+		cIndex.close();
+		
+		return activities;
+	}
 	
 	public String getData() {
 		Log.e("getData", "getData...");
@@ -177,4 +198,5 @@ public class HotOrNot{
 		m_ourDatabase.delete(DATABASE_TABLE, KEY_ROWID  + "=" + lrow1, null);
 		
 	}
+
 }
