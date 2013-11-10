@@ -81,24 +81,10 @@ public class kvsDBHelper extends SQLiteOpenHelper{
         m_ourDatabase.insert(DATABASE_TABLE, null, values);
         m_ourDatabase.close();
 	}
-
-	private kvsActivity cursorToActivity(Cursor cIndex) {
-		kvsActivity ac = new kvsActivity();
-		
-		int nRow = cIndex.getColumnIndex(KEY_ROWID);
-		int nName = cIndex.getColumnIndex(KEY_NAME);
-		int nDate = cIndex.getColumnIndex(KEY_DATE);
-		
-		ac.setId(cIndex.getLong(nRow));
-		ac.setActivityName(cIndex.getString(nName));
-		ac.setDate(cIndex.getString(nDate));
-		
-	    return ac;
-	  }
 	
-	public List<kvsActivity> getAllActivities() {
+public List<kvsActivity> getAllActivities() {
 		
-		Log.e("getAllActivities", "getAllActivities...");
+		Log.e("getAllActivities", "getActivities...");
 		
 		Cursor cIndex = m_ourDatabase.query(DATABASE_TABLE, m_strColum, null, null, null, null, null);
 		
@@ -118,9 +104,134 @@ public class kvsDBHelper extends SQLiteOpenHelper{
 		
 		return activities;
 	}
+
+	public List<kvsActivity> getAllCategory() {
+		Log.e("getAllActivities", "getAllCategory...");
+		
+		Cursor cIndex = m_ourDatabase.query(DATABASE_TABLE, m_strColum, null, null, null, null, null);
+		
+		List<kvsActivity> activities = new ArrayList<kvsActivity>();
+		List<String> nameCollection = new ArrayList<String>();
+		
+		for(cIndex.moveToFirst(); !cIndex.isAfterLast(); cIndex.moveToNext())
+		{
+			kvsActivity ac = cursorToActivity(cIndex);
+			String activityName = cursorToName(cIndex);
+			if(nameCollection.indexOf(activityName) < 0)
+			{
+				nameCollection.add(activityName);
+				activities.add(ac);
+			}
+		}
+		
+		cIndex.close();
+		
+		return activities;
+	}
+
+	public List<kvsActivity> getItemByCategory(String strName) {
+		Log.e("getAllActivities", "getItemByCategory...");
+		
+		Cursor cIndex = m_ourDatabase.query(DATABASE_TABLE, m_strColum, null, null, null, null, null);
+		
+		List<kvsActivity> activityList = new ArrayList<kvsActivity>();
+		
+		for(cIndex.moveToFirst(); !cIndex.isAfterLast(); cIndex.moveToNext())
+		{
+			kvsActivity ac = cursorToActivity(cIndex);
+			String activityName = cursorToName(cIndex);
+			if(activityName.equalsIgnoreCase(strName))
+				activityList.add(ac);
+		}
+		
+		cIndex.close();
+		
+		return activityList;
+	}
+
+	public kvsActivity getEntryByID(long l){
+		
+		Cursor c = m_ourDatabase.query(DATABASE_TABLE, m_strColum, KEY_ROWID + "=" + l,null, null, null, null);
+		
+		if(c!=null){
+			c.moveToFirst();
+			kvsActivity ac = cursorToActivity(c);
+			return ac;
+		}
+		
+		return null;
+	}
 	
-	public String getData() {
-		Log.e("getData", "getData...");
+	public String getNameByID(long l) {
+		String log = "Id: "+String.valueOf(l);
+		Log.e("getName", log);
+		String[] strColum = new String[] { KEY_ROWID, KEY_NAME, KEY_DATE }; 
+		Cursor c = m_ourDatabase.query(DATABASE_TABLE, strColum, KEY_ROWID + "=" + l,null, null, null, null);
+		if(c!=null){
+			c.moveToFirst();
+			int nName = c.getColumnIndex(KEY_NAME);
+			String name = c.getString(nName);
+			return name;
+		}
+		return null;
+	}
+
+	public String getDateByID(long l) {
+		String log = "Id: "+String.valueOf(l);
+		Log.e("getHotness", log);
+		
+		String[] strColum = new String[] { KEY_ROWID, KEY_NAME, KEY_DATE }; 
+		Cursor c = m_ourDatabase.query(DATABASE_TABLE, strColum, KEY_ROWID + "=" + l,null, null, null, null);
+		if(c!=null){
+			c.moveToFirst();
+			int nDate = c.getColumnIndex(KEY_DATE);
+			String name = c.getString(nDate);
+			return name;
+		}
+		return null;
+	}
+
+	public void UpdateEntry(long lrow, String name, String date) {
+		String log = "Id: "+String.valueOf(lrow) + ", name:" + name + ", date:" + date;
+		Log.e("getDate", log);
+		ContentValues cvUpdate = new ContentValues();
+		cvUpdate.put(KEY_NAME, name);
+		cvUpdate.put(KEY_DATE, date);
+		m_ourDatabase.update(DATABASE_TABLE, cvUpdate, KEY_ROWID + "=" + lrow, null);
+	}
+
+	public void DeleteEntryByID(long lrow1) {
+		Log.e("DeleteEntry", "DeleteEntryById...");
+		m_ourDatabase.delete(DATABASE_TABLE, KEY_ROWID  + "=" + lrow1, null);
+	}
+	
+	public void DeleteCategory(String strName) {
+		Log.e("DeleteEntry", strName);
+		m_ourDatabase.delete(DATABASE_TABLE, KEY_NAME + "='" + strName + "'", null);
+		Log.e("DeleteEntry", "DeleteEntryByName...finish");
+	}
+	
+
+	private String cursorToName(Cursor cIndex) {
+		int nName = cIndex.getColumnIndex(KEY_NAME);
+		return cIndex.getString(nName); 
+	}
+	
+	private kvsActivity cursorToActivity(Cursor cIndex) {
+		kvsActivity ac = new kvsActivity();
+		
+		int nRow = cIndex.getColumnIndex(KEY_ROWID);
+		int nName = cIndex.getColumnIndex(KEY_NAME);
+		int nDate = cIndex.getColumnIndex(KEY_DATE);
+
+		ac.setId(cIndex.getLong(nRow));
+		ac.setActivityName(cIndex.getString(nName));
+		ac.setDate(cIndex.getString(nDate));
+	    return ac;
+	  }
+	
+	public String printDBData() {
+		Log.e("getData", "printDBData...");
 
 		Cursor cIndex = m_ourDatabase.query(DATABASE_TABLE, m_strColum, null, null, null, null, null);
 		String result = "";
@@ -148,55 +259,4 @@ public class kvsDBHelper extends SQLiteOpenHelper{
 		
 		return result;
 	}
-
-	public String getName(long l) {
-		String log = "Id: "+String.valueOf(l);
-		Log.e("getName", log);
-		// TODO Auto-generated method stub
-		String[] strColum = new String[] { KEY_ROWID, KEY_NAME, KEY_DATE }; 
-		Cursor c = m_ourDatabase.query(DATABASE_TABLE, strColum, KEY_ROWID + "=" + l,null, null, null, null);
-		if(c!=null){
-			c.moveToFirst();
-			int nName = c.getColumnIndex(KEY_NAME);
-			String name = c.getString(nName);
-			return name;
-		}
-		return null;
-	}
-
-	public String getDate(long l) {
-		String log = "Id: "+String.valueOf(l);
-		Log.e("getHotness", log);
-		
-		// TODO Auto-generated method stub
-		String[] strColum = new String[] { KEY_ROWID, KEY_NAME, KEY_DATE }; 
-		Cursor c = m_ourDatabase.query(DATABASE_TABLE, strColum, KEY_ROWID + "=" + l,null, null, null, null);
-		if(c!=null){
-			c.moveToFirst();
-			int nDate = c.getColumnIndex(KEY_DATE);
-			String name = c.getString(nDate);
-			return name;
-		}
-		return null;
-	}
-
-	public void UpdateEntry(long lrow, String name, String date) {
-		String log = "Id: "+String.valueOf(lrow) + ", name:" + name + ", date:" + date;
-		Log.e("getDate", log);
-		//Log.e("UpdateEntry", "UpdateEntry...");
-		// TODO Auto-generated method stub
-		ContentValues cvUpdate = new ContentValues();
-		cvUpdate.put(KEY_NAME, name);
-		cvUpdate.put(KEY_DATE, date);
-		m_ourDatabase.update(DATABASE_TABLE, cvUpdate, KEY_ROWID + "=" + lrow, null);
-		
-	}
-
-	public void DeleteEntry(long lrow1) {
-		Log.e("DeleteEntry", "DeleteEntry...");
-		// TODO Auto-generated method stub
-		m_ourDatabase.delete(DATABASE_TABLE, KEY_ROWID  + "=" + lrow1, null);
-		
-	}
-
 }

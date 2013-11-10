@@ -1,15 +1,14 @@
 package com.kvs.kvssamples;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import com.kvs.kvssamples.R;
-
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,75 +16,80 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ListViewSimple2  extends Activity  implements View.OnClickListener{
+import com.kvs.kvssamples.ListViewSimple2.MyListButtonArrayAdapter;
+import com.kvs.kvssamples.ListViewSimple2.MyPerformanceArrayAdapter;
+import com.kvs.kvssamples.ListViewSimple2.MyListButtonArrayAdapter.ViewHolder;
 
-	Button sqladd, sqldelete, viewAll, viewCategoy;
-	
+public class ListViewWithDB extends Activity  implements View.OnClickListener{
+
 	MyPerformanceArrayAdapter adapter;
+	MyListButtonArrayAdapter buttonadapter;
 	ArrayList<String> m_listitem = new ArrayList<String>();
 	ArrayList<String> m_listsubitem = new ArrayList<String>();
-	//private kvsActivityMgr m_Mgr;
-
 	ArrayList<String> m_functionlistitem = new ArrayList<String>();
-	MyListButtonArrayAdapter featureadapter;
+	boolean m_bShowControl = false;
+	ListView functionlistview;
+	ListView mylistview;
+	
+	private String m_Text = "";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.listviewsimple1_layout);
+		setContentView(R.layout.listviewwithdb_layout);
 		
 		Log.e("onCreate", "1");
 		
-		sqladd = (Button) findViewById(R.id.additem);
-		sqldelete = (Button) findViewById(R.id.deleteitem);
-		viewAll =  (Button) findViewById(R.id.allItem);
-		viewCategoy = (Button) findViewById(R.id.singleItem);
-				
+		Button btnControl;
+		
+		btnControl =  (Button) findViewById(R.id.functionControl);
+		
+		mylistview = (ListView) findViewById(R.id.listview);
+		functionlistview = (ListView) findViewById(R.id.featurelistview);
+		
 		Log.e("onCreate", "2");
 		
-		final ListView mylistview = (ListView) findViewById(R.id.listview);
-		final ListView functionlistview = (ListView) findViewById(R.id.featurelistview);
-		
-		// load db
-		Log.e("onCreate", "3");
-		
-		kvsActivityMgr m_Mgr = new kvsActivityMgr(ListViewSimple2.this);
-		Log.e("onCreate", "3.5");
+		kvsActivityMgr m_Mgr = new kvsActivityMgr(this);
 		
 		m_Mgr.open();
-		Log.e("onCreate", "4");
+		
+		Log.e("onCreate", "3");
 		
 		List<kvsActivity> activities = m_Mgr.getAllActivities();
-		//List<kvsActivity> activities = m_Mgr.getAllActivitiesNonDuplicate();
 		
-		Log.e("onCreate", "5");
-			
+		Log.e("onCreate", "4");
+		
 		for (int i = 0; i < activities.size(); ++i) {
 			kvsActivity item = activities.get(i);
 	    	m_listitem.add(item.getActivityName());
 	    	m_listsubitem.add(String.valueOf(item.getId()));
 	    }
-	    
-		Log.e("onCreate", "6");
 		
-	    adapter = new MyPerformanceArrayAdapter(this, m_listitem, m_listsubitem, m_listitem);
+		Log.e("onCreate", "5");
+		
+		adapter = new MyPerformanceArrayAdapter(this, m_listitem, m_listsubitem, m_listitem);
+		
+		// add list like function button.
+		String strClassName[] = {"AddItem", "DeleteFirst", "ShowAll", "ShowCategory", "FilterItem"};
+		for(int i = 0; i< strClassName.length; i++)
+			m_functionlistitem.add(strClassName[i]);
+
+	    buttonadapter = new MyListButtonArrayAdapter(this, m_functionlistitem );
 	    
-	    Log.e("onCreate", "7");
-	    
-	    // add list like function button.
-	    m_functionlistitem.add("FilterVeryNice");
-	    m_functionlistitem.add("FilterHateIt");
-	    m_functionlistitem.add("FilterCool");
-	    featureadapter = new MyListButtonArrayAdapter(this, m_functionlistitem );
+	    Log.e("onCreate", "6");
 	    
 	    mylistview.setAdapter(adapter);
-	    functionlistview.setAdapter(featureadapter);
+	    Log.e("onCreate", "7");
+	    functionlistview.setAdapter(buttonadapter);
+	    
+	    Log.e("onCreate", "8");
 	    
 	    mylistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -98,7 +102,40 @@ public class ListViewSimple2  extends Activity  implements View.OnClickListener{
 	    	      , Toast.LENGTH_LONG).show();
 	    	    
 	    	    // delete item
-	    	    RemoveDBAndListViewSameName(position);
+	    	    //RemoveDBAndListViewSameName(position);
+	    	    // show detail view
+	    	    AlertDialog.Builder builder = new AlertDialog.Builder(ListViewWithDB.this);
+    			builder.setTitle("Entry Info");
+    			// Set up the input
+    			final TextView input = new TextView(ListViewWithDB.this);
+    			// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+    			
+    			kvsActivityMgr ex1 = new kvsActivityMgr(ListViewWithDB.this);
+    			ex1.open();
+    			kvsActivity ac = ex1.getEntryByID(Long.parseLong(m_listsubitem.get(position)));
+    			ex1.close();
+    			
+    			Log.e("getEntryByID", "getEntryByID return");
+    			
+    			if(ac != null)
+    			{
+    				Log.e("getEntryByID", "ac is not Null ");
+    				
+    				String strInfo = "Name: " + ac.getActivityName() + ", Date: "+ac.getDate();
+    				input.setText(strInfo);
+    				builder.setView(input);
+    			}
+    			    			
+    			// Set up the buttons
+    			builder.setPositiveButton("OK", new DialogInterface.OnClickListener() { 
+    			    @Override
+    			    public void onClick(DialogInterface dialog, int which) {
+    			    	//m_Text = input.getText().toString();
+    			    }
+    			});
+
+    			builder.show();
+    			
 	    	  }
 	      });	
 	    
@@ -109,27 +146,56 @@ public class ListViewSimple2  extends Activity  implements View.OnClickListener{
 	    	    int position, long id) {
 	    		
 	    		String strFunction = m_functionlistitem.get(position);
-	    		if( strFunction.equalsIgnoreCase("FilterVeryNice"))
+	    		if( strFunction.equalsIgnoreCase("AddItem"))
 	    		{
-	    			GetStringItems("Very Nice");
+	    			AddDBAndListView();
 	    		}
-	    		else if( strFunction.equalsIgnoreCase("FilterHateIt"))
+	    		else if( strFunction.equalsIgnoreCase("DeleteFirst"))
 	    		{
-	    			GetStringItems("Hate it");
+	    			RemoveDBAndListView(0);
 	    		}
-	    		else if( strFunction.equalsIgnoreCase("FilterCool"))
+	    		else if( strFunction.equalsIgnoreCase("ShowAll"))
 	    		{
-	    			GetStringItems("Cool");
+	    			RefreshAllItems();
 	    		}
-	    		
-	    	    //Toast.makeText(getApplicationContext(),
-	    	    //  "Click ListItem Number " + position+ ", name = " + m_functionlistitem.get(position)
-	    	    //  , Toast.LENGTH_LONG).show();
+	    		else if( strFunction.equalsIgnoreCase("ShowCategory"))
+	    		{
+	    			RefreshCategoryItems();
+	    		}
+	    		else if( strFunction.equalsIgnoreCase("FilterItem"))
+	    		{
+ 					AlertDialog.Builder builder = new AlertDialog.Builder(ListViewWithDB.this);
+	    			builder.setTitle("Filter by Category");
+	    			// Set up the input
+	    			final EditText input = new EditText(ListViewWithDB.this);
+	    			// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+	    			input.setInputType(InputType.TYPE_CLASS_TEXT);
+	    			builder.setView(input);
+
+	    			// Set up the buttons
+	    			builder.setPositiveButton("OK", new DialogInterface.OnClickListener() { 
+	    			    @Override
+	    			    public void onClick(DialogInterface dialog, int which) {
+	    			    	m_Text = input.getText().toString();
+	    			    }
+	    			});
+	    			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	    			    @Override
+	    			    public void onClick(DialogInterface dialog, int which) {
+	    			        dialog.cancel();
+	    			    }
+	    			});
+
+	    			builder.show();
+	    			
+	    			GetStringItems(m_Text);
+	    		}
 	    	  }
 
-	      });	  
-	    
-	    //functionlistview.setVisibility(View.GONE);
+	      });	
+	
+	    functionlistview.setVisibility(View.GONE);
+		m_bShowControl = false;
 	}
 	
 	private void GetStringItems(String strName) {
@@ -149,23 +215,28 @@ public class ListViewSimple2  extends Activity  implements View.OnClickListener{
 		ex1.close();
 		adapter.notifyDataSetChanged();
 	}
-	
+
+
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
-		case R.id.additem:
-			// add db and listview
-			AddDBAndListView();
+			case R.id.functionControl:
+				ShowHideControlers();				
 			break;
-		case R.id.deleteitem:		
-			RemoveDBAndListView(0);
-			break;
-		case R.id.allItem:
-			RefreshAllItems();
-			break;
-		case R.id.singleItem:
-			RefreshCategoryItems();
-			break;
+		}
+		
+	}
+	
+	private void ShowHideControlers() {
+		if(m_bShowControl)
+		{
+			functionlistview.setVisibility(View.GONE);
+			m_bShowControl = false;
+		}
+		else
+		{
+			functionlistview.setVisibility(View.VISIBLE);
+			m_bShowControl = true;		
 		}
 		
 	}
@@ -227,6 +298,8 @@ public class ListViewSimple2  extends Activity  implements View.OnClickListener{
 		}
 		
 		ex1.close();
+		
+		//RefreshAllItems();
 		
 		adapter.notifyDataSetChanged();
 	}
@@ -294,6 +367,7 @@ public class ListViewSimple2  extends Activity  implements View.OnClickListener{
 		adapter.notifyDataSetChanged();
 		
 	}
+	
 
 
 	public class MyListButtonArrayAdapter extends ArrayAdapter<String> {

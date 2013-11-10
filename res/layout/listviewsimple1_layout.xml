@@ -13,7 +13,7 @@
 
         <Button
             android:id="@+id/additem"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Add New" 
             android:layout_weight="1"
@@ -21,7 +21,7 @@
 
         <Button
             android:id="@+id/deleteitem"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Delete First" 
             android:layout_weight="1"
@@ -29,6 +29,42 @@
         
     </LinearLayout>
     
+    
+	<LinearLayout
+    	    android:id="@+id/views"
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/allItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="All" 
+            android:layout_weight="1"
+            android:onClick="onClick"/>
+
+        <Button
+            android:id="@+id/singleItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Catetgory" 
+            android:layout_weight="1"
+            android:onClick="onClick"/>
+        
+    </LinearLayout>
+    
+	<ListView 
+    android:id="@+id/featurelistview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" 
+    android:divider="@null"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:listSelector="@drawable/list_selector">
+    <!-- android:scrollbars="none" -->
+    
+</ListView>
+
 <ListView 
     android:id="@+id/listview"
     android:layout_width="match_parent"
@@ -36,9 +72,10 @@
     android:divider="@null"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:listSelector="@drawable/list_selector"
-    android:scrollbars="none">
+    android:listSelector="@drawable/list_selector">
+    <!-- android:scrollbars="none" -->
     
 </ListView>
 
+    
 </LinearLayout>
